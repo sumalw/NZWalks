@@ -25,5 +25,41 @@ namespace NZWalksAPI.Controllers
 
             return Ok(regions);
         }
+
+        [HttpGet]
+        [Route("{id:guid}")]
+        [ActionName("GetRegion")]
+        public async Task<IActionResult> GetRegion(Guid id)
+        {
+            var region = await _regionRepository.GetAsync(id);
+
+            return region == null ? NotFound("Request record not found") : Ok(region);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddRegion(Region region)
+        {
+            var newRegion = await _regionRepository.AddRegion(region);
+            return CreatedAtAction(nameof(GetRegion), new { id = region.Id }, newRegion);
+        }
+
+        [HttpDelete]
+        [Route("{id:guid}")]
+        public async Task<IActionResult> DeleteRegion(Guid id)
+        {
+            var region = await _regionRepository.DeleteRegion(id);
+
+            return region == null ? NotFound() : Ok(region);
+        }
+
+        [HttpPut]
+        [Route("{id:guid}")]
+        public async Task<IActionResult> UpdateRegion(Guid id, Region region)
+        {
+            var updatedRegion = await _regionRepository.UpdateRegion(id, region);
+
+            return region == null ? NotFound() : Ok(updatedRegion);
+
+        }
     }
 }
