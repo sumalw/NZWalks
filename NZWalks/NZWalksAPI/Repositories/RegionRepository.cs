@@ -15,12 +15,14 @@ namespace NZWalksAPI.Repositories
 
         public async Task<IEnumerable<Region>> GetAllAsync()
         {
-            return await _context.Regions.ToListAsync();
+            return await _context.Regions.Include(x => x.Walks).ToListAsync();
         }
 
         public async Task<Region> GetAsync(Guid id)
         {
-            var region = await _context.Regions.FirstOrDefaultAsync(x => x.Id == id);
+            var region = await _context.Regions
+                .Include(x => x.Walks)
+                .FirstOrDefaultAsync(x => x.Id == id);
             return region;
         }
 
